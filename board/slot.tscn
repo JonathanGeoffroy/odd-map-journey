@@ -2,5 +2,17 @@
 
 [ext_resource type="Script" uid="uid://dj0scm1v40i4b" path="res://board/slot.gd" id="1_qeps0"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qeps0"]
+size = Vector2(128, 128)
+
 [node name="Slot" type="Node2D" unique_id=1114971768]
 script = ExtResource("1_qeps0")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=362743113]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1821525461]
+unique_name_in_owner = true
+position = Vector2(64, 64)
+shape = SubResource("RectangleShape2D_qeps0")
+
+[connection signal="mouse_entered" from="Area2D" to="." method="on_mouse_entered"]

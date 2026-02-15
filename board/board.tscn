@@ -4,5 +4,3 @@
 
 [node name="Board" type="Node2D" unique_id=1757372025]
 script = ExtResource("1_k4dee")
-
-[node name="Area2D" type="Area2D" parent="." unique_id=291500764]
