@@ -2,8 +2,17 @@
 
 [ext_resource type="Script" uid="uid://bupcakgtpgms1" path="res://tile/tile.gd" id="1_1t4ac"]
 
-[node name="Tile" type="Node2D" unique_id=1848656140]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1t4ac"]
+size = Vector2(128, 128)
+
+[node name="Tile" type="Node2D" unique_id=1848656140 groups=["Tile"]]
 script = ExtResource("1_1t4ac")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=330038942]
 unique_name_in_owner = true
+
+[node name="Area2D" type="Area2D" parent="." unique_id=158733941]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=452481668]
+position = Vector2(64, 64)
+shape = SubResource("RectangleShape2D_1t4ac")

@@ -4,6 +4,8 @@ const TileScene = preload("res://tile/Tile.tscn")
 
 @export var margin := 8
 
+var selected_tile: Tile = null
+
 
 func _ready() -> void:
 	Globals.on_tile_added.connect(on_tile_added)
@@ -31,3 +33,26 @@ func on_tile_added(tileValue: TileValue, index: int) -> void:
 				tile.position.y += Globals.slot_size
 
 			i += 1
+
+
+func _input(event):
+	if event is InputEventMouseButton and event.pressed:
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				if selected_tile:
+					selected_tile.set_selected(false)
+					selected_tile = null
+
+				var global_position = get_global_mouse_position()
+				for child in get_children():
+					if child.is_in_group("Tile"):
+						var tile: Tile = child
+						var rect = Rect2(
+							tile.global_position.x,
+							tile.global_position.y,
+							Globals.slot_size,
+							Globals.slot_size
+						)
+						if rect.has_point(global_position):
+							selected_tile = tile
+							selected_tile.set_selected(true)

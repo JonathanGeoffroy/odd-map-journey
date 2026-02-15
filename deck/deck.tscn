@@ -4,3 +4,4 @@
 
 [node name="Deck" type="Node2D" unique_id=2064721474]
 script = ExtResource("1_iau1w")
+margin = null
