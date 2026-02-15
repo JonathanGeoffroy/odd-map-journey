@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c2qqekyjt02ud"]
+
+[ext_resource type="Script" uid="uid://bupcakgtpgms1" path="res://tile/tile.gd" id="1_1t4ac"]
+
+[node name="Tile" type="Node2D" unique_id=1848656140]
+script = ExtResource("1_1t4ac")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=330038942]
+unique_name_in_owner = true
