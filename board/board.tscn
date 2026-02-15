@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c5bukdlo33f5x"]
+
+[ext_resource type="Script" uid="uid://dpjwni8cf3nh1" path="res://board/board.gd" id="1_k4dee"]
+
+[node name="Board" type="Node2D" unique_id=1757372025]
+script = ExtResource("1_k4dee")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=291500764]

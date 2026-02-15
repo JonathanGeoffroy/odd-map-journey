@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="odd-map-journey"
+run/main_scene="uid://bwkiao2j5p8l7"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Globals="*uid://bncp83j0isxsv"
 
 [physics]
 

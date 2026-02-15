@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dv7533jnvidat"]
+
+[ext_resource type="Script" uid="uid://dj0scm1v40i4b" path="res://board/slot.gd" id="1_qeps0"]
+
+[node name="Slot" type="Node2D" unique_id=1114971768]
+script = ExtResource("1_qeps0")
