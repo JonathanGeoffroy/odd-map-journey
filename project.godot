@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 Globals="*uid://bncp83j0isxsv"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [global_group]
 
 Tile=""

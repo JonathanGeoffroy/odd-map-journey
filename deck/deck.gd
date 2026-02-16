@@ -39,10 +39,6 @@ func _input(event):
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
-				if selected_tile:
-					selected_tile.set_selected(false)
-					selected_tile = null
-
 				var global_position = get_global_mouse_position()
 				for child in get_children():
 					if child.is_in_group("Tile"):
@@ -54,5 +50,11 @@ func _input(event):
 							Globals.slot_size
 						)
 						if rect.has_point(global_position):
-							selected_tile = tile
-							selected_tile.set_selected(true)
+							if tile == selected_tile:
+								tile.set_selected(false)
+								selected_tile = null
+							else:
+								if selected_tile != null:
+									selected_tile.set_selected(false)
+								selected_tile = tile
+								tile.set_selected(true)
