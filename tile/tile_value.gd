@@ -7,6 +7,7 @@ enum TileRoad { TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3 }
 
 @export var kind: TileKind
 @export var roads: Array[bool] = [false, false, false, false]
+@export var errored := false
 
 
 static func generate() -> TileValue:

@@ -20,13 +20,20 @@ func _ready() -> void:
 	Globals.on_selection_change.connect(on_selection_change)
 
 
+func _process(delta: float) -> void:
+	if value.errored:
+		set_modulate(Color(1, 0, 0, 1))
+	else:
+		set_modulate(Color.WHITE)
+
+
 func set_selected(selected: bool):
 	is_selected = selected
 
 	if is_selected:
-		$Sprite2D.set_modulate(Color(1, 0, 0, 1))
+		set_modulate(Color(0, 1, 0, 1))
 	else:
-		$Sprite2D.set_modulate(Color.WHITE)
+		set_modulate(Color.WHITE)
 
 
 func on_selection_change(tile_value: TileValue) -> void:

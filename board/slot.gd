@@ -7,4 +7,4 @@ func _draw() -> void:
 
 
 func on_mouse_entered() -> void:
-	print("mouse entered", self.global_position)
+	pass
