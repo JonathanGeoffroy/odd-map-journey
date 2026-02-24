@@ -41,7 +41,6 @@ func on_play_selection(grid_index: int) -> void:
 	var children = get_children()
 	var selected_tile_index = children.find_custom(
 		func(child):
-			print(child.is_in_group("Tile"))
 			return child.is_in_group("Tile") and (child as Tile).value == Globals.selected_tile
 	)
 	assert(selected_tile_index >= 0, "tile to play not found")

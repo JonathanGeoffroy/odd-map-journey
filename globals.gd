@@ -29,6 +29,5 @@ func set_slot_size(size: int) -> void:
 
 
 func set_selection(value: TileValue):
-	print("selection", value)
 	selected_tile = value
 	on_selection_change.emit(value)

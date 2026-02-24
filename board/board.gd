@@ -26,7 +26,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if Globals.selected_tile != null and is_mouse_inside():
-		print(get_global_mouse_position())
 		Globals.selected_tile.errored = !can_add_tile_at(
 			Globals.selected_tile, get_global_mouse_position()
 		)
@@ -52,14 +51,13 @@ func find_slot_index_at(mouse_position: Vector2) -> int:
 
 	var result = col * NB_COLUMNS + row
 
-	if result >= 0 or result < NB_ROWS * NB_COLUMNS:
+	if result >= 0 and result < NB_ROWS * NB_COLUMNS:
 		return result
 	return -1
 
 
 func is_mouse_inside() -> bool:
 	var mouse_position = get_global_mouse_position()
-	print(mouse_position)
 	var local_position = mouse_position - position
 
 	var rect = Rect2(
@@ -108,6 +106,9 @@ func can_add_tile_at(tile: TileValue, mouse_position: Vector2) -> bool:
 
 func find_sibling_tiles(i: int) -> Array[TileValue]:
 	var length = NB_COLUMNS * NB_ROWS
+
+	assert(i >= 0 && i < length)
+
 	var top: int = i - NB_COLUMNS if i >= NB_COLUMNS else length - (NB_COLUMNS - i)
 	var bottom: int = i + NB_COLUMNS if i + NB_COLUMNS < length else (i + NB_COLUMNS) - length
 	var left: int = i - 1 if i % NB_COLUMNS != 0 else i + NB_COLUMNS - 1
