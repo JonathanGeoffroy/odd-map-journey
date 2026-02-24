@@ -65,7 +65,7 @@ func is_mouse_inside() -> bool:
 
 
 func can_add_tile_at(tile: TileValue, slot_index: int) -> bool:
-	if slot_index == -1:
+	if slot_index == -1 or Globals.grid[slot_index] != null:
 		return false
 
 	var tiles = find_sibling_tiles(slot_index)
