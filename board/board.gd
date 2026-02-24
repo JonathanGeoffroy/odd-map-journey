@@ -1,19 +1,21 @@
 extends Node2D
+class_name Board
 
-var NB_COLUMNS := 5
-var NB_ROWS := 4
+var NB_COLUMNS := Globals.NB_COLUMNS
+var NB_ROWS := Globals.NB_ROWS
+var LENGTH = NB_ROWS * NB_COLUMNS
 
 var SlotScene := preload("res://board/slot.tscn")
 
+# FIXME : should we have this, or should we rely on Globals ?
 var slots: Array[TileValue]
 
 
 func _ready() -> void:
-	Globals.initialize()
-	Globals.on_tile_played.connect(on_play_tile)
-
 	slots = []
-	slots.resize(20)
+	slots.resize(NB_COLUMNS * NB_ROWS)
+
+	Globals.on_tile_played.connect(on_play_tile)
 
 	for i in range(0, NB_ROWS * NB_COLUMNS):
 		var slot: Slot = SlotScene.instantiate()
@@ -23,12 +25,13 @@ func _ready() -> void:
 		slot.position = Vector2(x, y)
 		add_child(slot)
 
+	Globals.initialize()
+
 
 func _process(delta: float) -> void:
 	if Globals.selected_tile != null and is_mouse_inside():
-		Globals.selected_tile.errored = !can_add_tile_at(
-			Globals.selected_tile, get_global_mouse_position()
-		)
+		var slot_index = find_slot_index_at(get_global_mouse_position())
+		Globals.selected_tile.errored = !can_add_tile_at(Globals.selected_tile, slot_index)
 
 
 func _input(event: InputEvent) -> void:
@@ -39,8 +42,10 @@ func _input(event: InputEvent) -> void:
 					return
 
 				var slot_index = find_slot_index_at(get_global_mouse_position())
-				Globals.on_slot_clicked.emit(slot_index)
-				print("PLAY AT", slot_index)
+
+				if can_add_tile_at(Globals.selected_tile, slot_index):
+					print("PLAY AT", slot_index)
+					Globals.on_slot_clicked.emit(slot_index)
 
 
 func find_slot_index_at(mouse_position: Vector2) -> int:
@@ -66,9 +71,7 @@ func is_mouse_inside() -> bool:
 	return rect.has_point(local_position)
 
 
-func can_add_tile_at(tile: TileValue, mouse_position: Vector2) -> bool:
-	var slot_index = find_slot_index_at(mouse_position)
-
+func can_add_tile_at(tile: TileValue, slot_index: int) -> bool:
 	if slot_index == -1:
 		return false
 
@@ -83,6 +86,7 @@ func can_add_tile_at(tile: TileValue, mouse_position: Vector2) -> bool:
 		return false
 
 	var roads = tile.roads
+
 	# All tiles must be valid with the new tile
 	return (
 		(
@@ -91,7 +95,7 @@ func can_add_tile_at(tile: TileValue, mouse_position: Vector2) -> bool:
 		)
 		and (
 			tile_down == null
-			|| tile_up.roads[TileValue.TileRoad.TOP] == roads[TileValue.TileRoad.BOTTOM]
+			|| tile_down.roads[TileValue.TileRoad.TOP] == roads[TileValue.TileRoad.BOTTOM]
 		)
 		and (
 			tile_left == null
@@ -105,12 +109,10 @@ func can_add_tile_at(tile: TileValue, mouse_position: Vector2) -> bool:
 
 
 func find_sibling_tiles(i: int) -> Array[TileValue]:
-	var length = NB_COLUMNS * NB_ROWS
+	assert(i >= 0 && i < LENGTH)
 
-	assert(i >= 0 && i < length)
-
-	var top: int = i - NB_COLUMNS if i >= NB_COLUMNS else length - (NB_COLUMNS - i)
-	var bottom: int = i + NB_COLUMNS if i + NB_COLUMNS < length else (i + NB_COLUMNS) - length
+	var top: int = i - NB_COLUMNS if i >= NB_COLUMNS else LENGTH - (NB_COLUMNS - i)
+	var bottom: int = i + NB_COLUMNS if i + NB_COLUMNS < LENGTH else (i + NB_COLUMNS) - LENGTH
 	var left: int = i - 1 if i % NB_COLUMNS != 0 else i + NB_COLUMNS - 1
 	var right: int = i + 1 if (i + 1) % NB_COLUMNS != 0 else i - NB_COLUMNS + 1
 
