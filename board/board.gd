@@ -7,14 +7,8 @@ var LENGTH = NB_ROWS * NB_COLUMNS
 
 var SlotScene := preload("res://board/slot.tscn")
 
-# FIXME : should we have this, or should we rely on Globals ?
-var slots: Array[TileValue]
-
 
 func _ready() -> void:
-	slots = []
-	slots.resize(NB_COLUMNS * NB_ROWS)
-
 	Globals.on_tile_played.connect(on_play_tile)
 
 	for i in range(0, NB_ROWS * NB_COLUMNS):
@@ -44,7 +38,6 @@ func _input(event: InputEvent) -> void:
 				var slot_index = find_slot_index_at(get_global_mouse_position())
 
 				if can_add_tile_at(Globals.selected_tile, slot_index):
-					print("PLAY AT", slot_index)
 					Globals.on_slot_clicked.emit(slot_index)
 
 
@@ -116,11 +109,12 @@ func find_sibling_tiles(i: int) -> Array[TileValue]:
 	var left: int = i - 1 if i % NB_COLUMNS != 0 else i + NB_COLUMNS - 1
 	var right: int = i + 1 if (i + 1) % NB_COLUMNS != 0 else i - NB_COLUMNS + 1
 
-	return [slots[top], slots[right], slots[bottom], slots[left]]
+	var grid = Globals.grid
+	return [grid[top], grid[right], grid[bottom], grid[left]]
 
 
 func on_play_tile(tile: Tile, gridIndex: int) -> void:
-	slots[gridIndex] = tile.value
+	Globals.grid[gridIndex] = tile.value
 	var slot := find_slot_at(gridIndex)
 	slot.add_child(tile)
 	tile.position = Vector2(0, 0)

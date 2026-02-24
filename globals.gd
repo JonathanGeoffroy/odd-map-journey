@@ -9,7 +9,7 @@ signal on_slot_clicked(slotIndex: int)
 
 @export var NB_COLUMNS := 5
 @export var NB_ROWS := 4
-@export var grid: Array[Slot] = []
+@export var grid: Array[TileValue]
 @export var slot_size: int = 128
 
 @export var deck: Array[TileValue] = []
