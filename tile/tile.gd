@@ -37,4 +37,7 @@ func set_selected(selected: bool):
 
 
 func on_selection_change(tile_value: TileValue) -> void:
-	set_selected(true if value == tile_value else false)
+	var selected = value == tile_value
+	set_selected(selected)
+	if !selected:
+		value.errored = false
