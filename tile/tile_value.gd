@@ -1,6 +1,8 @@
 extends Node
 class_name TileValue
 
+signal on_rotate(rotation: int)
+
 enum TileKind { TOP_BOTTOM = 0, TOP_LEFT = 1, TOP_LEFT_RIGHT = 2, ALL = 3 }
 
 enum TileRoad { TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3 }
@@ -8,6 +10,7 @@ enum TileRoad { TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3 }
 @export var kind: TileKind
 @export var roads: Array[bool] = [false, false, false, false]
 @export var errored := false
+@export var rotation := 0
 
 
 static func generate() -> TileValue:
@@ -35,3 +38,8 @@ static func compute_road_by_kind(kind: TileKind) -> Array[bool]:
 		_:
 			assert(false, str("Should handle TileKind ", kind))
 			return [true, true, true, true]
+
+
+func rotate(number: int) -> void:
+	rotation = (rotation + number) % 4
+	on_rotate.emit(rotation)

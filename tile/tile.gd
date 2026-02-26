@@ -22,6 +22,8 @@ func _ready() -> void:
 
 	Globals.on_selection_change.connect(on_selection_change)
 
+	value.on_rotate.connect(on_rotated)
+
 
 func _process(delta: float) -> void:
 	if value.errored:
@@ -53,3 +55,7 @@ func on_selection_change(tile_value: TileValue) -> void:
 	set_selected(selected)
 	if !selected:
 		value.errored = false
+
+
+func on_rotated(rotation_index: int) -> void:
+	%Pivot.rotation = 2 * PI * rotation_index / 4

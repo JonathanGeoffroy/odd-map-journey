@@ -40,6 +40,12 @@ func _input(event: InputEvent) -> void:
 				if can_add_tile_at(Globals.selected_tile, slot_index):
 					Globals.on_slot_clicked.emit(slot_index)
 
+			MOUSE_BUTTON_RIGHT:
+				if !Globals.selected_tile:
+					return
+
+				Globals.selected_tile.rotate(1)
+
 
 func find_slot_index_at(mouse_position: Vector2) -> int:
 	var local_position = mouse_position - position
@@ -64,6 +70,10 @@ func is_mouse_inside() -> bool:
 	return rect.has_point(local_position)
 
 
+func road_at(tile: TileValue, roadIndex: TileValue.TileRoad) -> bool:
+	return tile.roads[(roadIndex + 4 - tile.rotation) % 4]
+
+
 func can_add_tile_at(tile: TileValue, slot_index: int) -> bool:
 	if slot_index == -1 or Globals.grid[slot_index] != null:
 		return false
@@ -80,24 +90,21 @@ func can_add_tile_at(tile: TileValue, slot_index: int) -> bool:
 
 	var roads = tile.roads
 
+	var up = null if tile_up == null else road_at(tile_up, TileValue.TileRoad.BOTTOM)
+	var bottom = null if tile_down == null else road_at(tile_down, TileValue.TileRoad.TOP)
+	var left = null if tile_left == null else road_at(tile_left, TileValue.TileRoad.RIGHT)
+	var right = null if tile_right == null else road_at(tile_right, TileValue.TileRoad.LEFT)
+
+	# Tile should connect at least one road
+	if !(up or bottom or left or right):
+		return false
+
 	# All tiles must be valid with the new tile
 	return (
-		(
-			tile_up == null
-			|| tile_up.roads[TileValue.TileRoad.BOTTOM] == roads[TileValue.TileRoad.TOP]
-		)
-		and (
-			tile_down == null
-			|| tile_down.roads[TileValue.TileRoad.TOP] == roads[TileValue.TileRoad.BOTTOM]
-		)
-		and (
-			tile_left == null
-			|| tile_left.roads[TileValue.TileRoad.RIGHT] == roads[TileValue.TileRoad.LEFT]
-		)
-		and (
-			tile_right == null
-			|| tile_right.roads[TileValue.TileRoad.LEFT] == roads[TileValue.TileRoad.RIGHT]
-		)
+		(tile_up == null || up == road_at(tile, TileValue.TileRoad.TOP))
+		and (tile_down == null || (bottom == road_at(tile, TileValue.TileRoad.BOTTOM)))
+		and (tile_left == null || (left == road_at(tile, TileValue.TileRoad.LEFT)))
+		and (tile_right == null || (right == road_at(tile, TileValue.TileRoad.RIGHT)))
 	)
 
 
