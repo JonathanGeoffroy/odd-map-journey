@@ -20,6 +20,7 @@ func _ready() -> void:
 		add_child(slot)
 
 	Globals.initialize()
+	%Player.initialize(Globals.player)
 
 
 func _process(delta: float) -> void:
@@ -36,14 +37,12 @@ func _input(event: InputEvent) -> void:
 					return
 
 				var slot_index = find_slot_index_at(get_global_mouse_position())
-
 				if can_add_tile_at(Globals.selected_tile, slot_index):
 					Globals.on_slot_clicked.emit(slot_index)
 
 			MOUSE_BUTTON_RIGHT:
 				if !Globals.selected_tile:
 					return
-
 				Globals.selected_tile.rotate(1)
 
 
@@ -137,3 +136,8 @@ func find_slot_at(gridIndex: int) -> Slot:
 				i += 1
 	assert(false, str("Slot not found at index", gridIndex))
 	return null
+
+
+func find_slot(tileValue: TileValue) -> Slot:
+	var index := Globals.grid.find(tileValue)
+	return find_slot_at(index)

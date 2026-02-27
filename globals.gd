@@ -8,11 +8,13 @@ signal on_tile_removed(value: TileValue, index: int)
 signal on_slot_clicked(slotIndex: int)
 
 @export var NB_COLUMNS := 5
-@export var NB_ROWS := 4
+@export var NB_ROWS := 5
 @export var grid: Array[TileValue]
 @export var slot_size: int = 128
 
 @export var deck: Array[TileValue] = []
+
+@export var player: PlayerValue
 
 var selected_tile: TileValue = null
 
@@ -28,7 +30,11 @@ func initialize() -> void:
 
 	var tile = TileScene.instantiate()
 	tile.value = TileValue.generate()
-	on_tile_played.emit(tile, 8)
+
+	player = PlayerValue.new()
+	player.move_to(TilePartValue.from_tile_value(tile.value))
+
+	on_tile_played.emit(tile, NB_ROWS * NB_COLUMNS / 2)
 
 
 func set_slot_size(size: int) -> void:
@@ -38,3 +44,8 @@ func set_slot_size(size: int) -> void:
 func set_selection(value: TileValue):
 	selected_tile = value
 	on_selection_change.emit(value)
+
+
+func get_board() -> Board:
+	var board = get_node("/root/Game/Board")
+	return board

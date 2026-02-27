@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://c5bukdlo33f5x"]
 
 [ext_resource type="Script" uid="uid://dpjwni8cf3nh1" path="res://board/board.gd" id="1_k4dee"]
+[ext_resource type="PackedScene" uid="uid://ddmv43qsnsetd" path="res://character/player.tscn" id="2_k4dee"]
 
 [node name="Board" type="Node2D" unique_id=1757372025]
 script = ExtResource("1_k4dee")
+
+[node name="Player" parent="." unique_id=1548293549 instance=ExtResource("2_k4dee")]
+unique_name_in_owner = true
