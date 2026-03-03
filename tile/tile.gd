@@ -38,6 +38,9 @@ func _process(delta: float) -> void:
 
 
 func set_selected(selected: bool):
+	if is_selected == selected:
+		return
+
 	is_selected = selected
 
 	if is_selected:
@@ -45,6 +48,7 @@ func set_selected(selected: bool):
 		previous_position = position
 	else:
 		set_modulate(Color.WHITE)
+		value.errored = false
 		if previous_position != null:
 			position = previous_position
 			previous_position = null
@@ -53,8 +57,6 @@ func set_selected(selected: bool):
 func on_selection_change(tile_value: TileValue) -> void:
 	var selected = value == tile_value
 	set_selected(selected)
-	if !selected:
-		value.errored = false
 
 
 func on_rotated(rotation_index: int) -> void:

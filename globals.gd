@@ -6,11 +6,13 @@ signal on_tile_added(value: TileValue, index: int)
 signal on_tile_played(value: Tile, slotIndex: int)
 signal on_tile_removed(value: TileValue, index: int)
 signal on_slot_clicked(slotIndex: int)
+signal on_slot_hover_change(value: TileValue, index: int)
 
 @export var NB_COLUMNS := 5
 @export var NB_ROWS := 5
 @export var grid: Array[TileValue]
 @export var slot_size: int = 128
+@export var slot_hover = null
 
 @export var deck: Array[TileValue] = []
 
@@ -43,7 +45,12 @@ func set_slot_size(size: int) -> void:
 
 func set_selection(value: TileValue):
 	selected_tile = value
-	on_selection_change.emit(value)
+	on_selection_change.emit(selected_tile)
+
+
+func set_slot_hover(index):
+	slot_hover = index
+	on_slot_hover_change.emit(index)
 
 
 func get_board() -> Board:

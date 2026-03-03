@@ -18,7 +18,6 @@ func move_to(tile_part: TilePartValue) -> void:
 	var slot: Slot = board.find_slot(tile_part.tile_value)
 
 	var offset: Vector2
-	print(tile_part.road)
 	match tile_part.road:
 		TileValue.TileRoad.TOP:
 			offset = Vector2(-offset_value, 0)

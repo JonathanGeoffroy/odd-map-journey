@@ -3,13 +3,16 @@ class_name Board
 
 var NB_COLUMNS := Globals.NB_COLUMNS
 var NB_ROWS := Globals.NB_ROWS
-var LENGTH = NB_ROWS * NB_COLUMNS
 
 var SlotScene := preload("res://board/slot.tscn")
+
+@onready var boardChecker := BoardChecker.new()
 
 
 func _ready() -> void:
 	Globals.on_tile_played.connect(on_play_tile)
+	Globals.on_slot_hover_change.connect(on_slot_hover_changed)
+	Globals.on_selection_change.connect(on_selection_changed)
 
 	for i in range(0, NB_ROWS * NB_COLUMNS):
 		var slot: Slot = SlotScene.instantiate()
@@ -26,7 +29,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if Globals.selected_tile != null and is_mouse_inside():
 		var slot_index = find_slot_index_at(get_global_mouse_position())
-		Globals.selected_tile.errored = !can_add_tile_at(Globals.selected_tile, slot_index)
+		if Globals.slot_hover != slot_index:
+			Globals.set_slot_hover(slot_index if slot_index > -1 else null)
 
 
 func _input(event: InputEvent) -> void:
@@ -37,13 +41,14 @@ func _input(event: InputEvent) -> void:
 					return
 
 				var slot_index = find_slot_index_at(get_global_mouse_position())
-				if can_add_tile_at(Globals.selected_tile, slot_index):
+				if boardChecker.can_add_tile_at(Globals.selected_tile, slot_index):
 					Globals.on_slot_clicked.emit(slot_index)
 
 			MOUSE_BUTTON_RIGHT:
 				if !Globals.selected_tile:
 					return
 				Globals.selected_tile.rotate(1)
+				Globals.set_selection(Globals.selected_tile)
 
 
 func find_slot_index_at(mouse_position: Vector2) -> int:
@@ -69,61 +74,26 @@ func is_mouse_inside() -> bool:
 	return rect.has_point(local_position)
 
 
-func road_at(tile: TileValue, roadIndex: TileValue.TileRoad) -> bool:
-	return tile.roads[(roadIndex + 4 - tile.rotation) % 4]
-
-
-func can_add_tile_at(tile: TileValue, slot_index: int) -> bool:
-	if slot_index == -1 or Globals.grid[slot_index] != null:
-		return false
-
-	var tiles = find_sibling_tiles(slot_index)
-	var tile_up: TileValue = tiles[0]
-	var tile_right: TileValue = tiles[1]
-	var tile_down: TileValue = tiles[2]
-	var tile_left: TileValue = tiles[3]
-
-	# tile must touch at least one other tile
-	if tile_up == null && tile_down == null && tile_left == null && tile_right == null:
-		return false
-
-	var roads = tile.roads
-
-	var up = null if tile_up == null else road_at(tile_up, TileValue.TileRoad.BOTTOM)
-	var bottom = null if tile_down == null else road_at(tile_down, TileValue.TileRoad.TOP)
-	var left = null if tile_left == null else road_at(tile_left, TileValue.TileRoad.RIGHT)
-	var right = null if tile_right == null else road_at(tile_right, TileValue.TileRoad.LEFT)
-
-	# Tile should connect at least one road
-	if !(up or bottom or left or right):
-		return false
-
-	# All tiles must be valid with the new tile
-	return (
-		(tile_up == null || up == road_at(tile, TileValue.TileRoad.TOP))
-		and (tile_down == null || (bottom == road_at(tile, TileValue.TileRoad.BOTTOM)))
-		and (tile_left == null || (left == road_at(tile, TileValue.TileRoad.LEFT)))
-		and (tile_right == null || (right == road_at(tile, TileValue.TileRoad.RIGHT)))
-	)
-
-
-func find_sibling_tiles(i: int) -> Array[TileValue]:
-	assert(i >= 0 && i < LENGTH)
-
-	var top: int = i - NB_COLUMNS if i >= NB_COLUMNS else LENGTH - (NB_COLUMNS - i)
-	var bottom: int = i + NB_COLUMNS if i + NB_COLUMNS < LENGTH else (i + NB_COLUMNS) - LENGTH
-	var left: int = i - 1 if i % NB_COLUMNS != 0 else i + NB_COLUMNS - 1
-	var right: int = i + 1 if (i + 1) % NB_COLUMNS != 0 else i - NB_COLUMNS + 1
-
-	var grid = Globals.grid
-	return [grid[top], grid[right], grid[bottom], grid[left]]
-
-
 func on_play_tile(tile: Tile, gridIndex: int) -> void:
 	Globals.grid[gridIndex] = tile.value
 	var slot := find_slot_at(gridIndex)
 	slot.add_child(tile)
 	tile.position = Vector2(0, 0)
+
+
+func on_slot_hover_changed(slot_index) -> void:
+	compute_tile_state(slot_index)
+
+
+func on_selection_changed(tileValue: TileValue) -> void:
+	compute_tile_state(Globals.slot_hover)
+
+
+func compute_tile_state(slot_index) -> void:
+	if Globals.selected_tile != null:
+		Globals.selected_tile.errored = (
+			slot_index != null and !boardChecker.can_add_tile_at(Globals.selected_tile, slot_index)
+		)
 
 
 func find_slot_at(gridIndex: int) -> Slot:
