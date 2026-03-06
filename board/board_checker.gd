@@ -47,10 +47,10 @@ func can_add_tile_at(tile: TileValue, slot_index: int) -> bool:
 func find_sibling_tiles(i: int) -> Array[TileValue]:
 	assert(i >= 0 && i < LENGTH)
 
-	var top: int = i - NB_COLUMNS if i >= NB_COLUMNS else LENGTH - (NB_COLUMNS - i)
-	var bottom: int = i + NB_COLUMNS if i + NB_COLUMNS < LENGTH else (i + NB_COLUMNS) - LENGTH
-	var left: int = i - 1 if i % NB_COLUMNS != 0 else i + NB_COLUMNS - 1
-	var right: int = i + 1 if (i + 1) % NB_COLUMNS != 0 else i - NB_COLUMNS + 1
+	var top: int = BoardHelper.get_top(i)
+	var bottom: int = BoardHelper.get_bottom(i)
+	var left: int = BoardHelper.get_left(i)
+	var right: int = BoardHelper.get_right(i)
 
 	var grid = Globals.grid
 	return [grid[top], grid[right], grid[bottom], grid[left]]

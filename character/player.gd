@@ -12,7 +12,7 @@ func initialize(player: PlayerValue) -> void:
 	player.on_player_moved.connect(move_to)
 
 
-func move_to(tile_part: TilePartValue) -> void:
+func move_to(tile_part: PathPart) -> void:
 	var offset_value := Globals.slot_size / 3
 	var board := Globals.get_board()
 	var slot: Slot = board.find_slot(tile_part.tile_value)
@@ -20,13 +20,13 @@ func move_to(tile_part: TilePartValue) -> void:
 	var offset: Vector2
 	match tile_part.road:
 		TileValue.TileRoad.TOP:
-			offset = Vector2(-offset_value, 0)
-		TileValue.TileRoad.RIGHT:
-			offset = Vector2(0, offset_value)
-		TileValue.TileRoad.BOTTOM:
-			offset = Vector2(offset_value, 0)
-		TileValue.TileRoad.LEFT:
 			offset = Vector2(0, -offset_value)
+		TileValue.TileRoad.RIGHT:
+			offset = Vector2(offset_value, 0)
+		TileValue.TileRoad.BOTTOM:
+			offset = Vector2(0, -offset_value)
+		TileValue.TileRoad.LEFT:
+			offset = Vector2(offset_value, 0)
 
 	global_position = (
 		slot.global_position

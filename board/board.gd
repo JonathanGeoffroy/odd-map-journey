@@ -7,6 +7,7 @@ var NB_ROWS := Globals.NB_ROWS
 var SlotScene := preload("res://board/slot.tscn")
 
 @onready var boardChecker := BoardChecker.new()
+@onready var boardPath := BoardPath.new()
 
 
 func _ready() -> void:
@@ -83,6 +84,15 @@ func on_play_tile(tile: Tile, gridIndex: int) -> void:
 
 func on_slot_hover_changed(slot_index) -> void:
 	compute_tile_state(slot_index)
+
+	if slot_index != null:
+		var best_path = (
+			boardPath
+			. find_best_path(
+				Globals.grid,
+				Globals.player.current_part,
+			)
+		)
 
 
 func on_selection_changed(tileValue: TileValue) -> void:

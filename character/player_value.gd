@@ -1,12 +1,12 @@
 extends Node
 class_name PlayerValue
 
-signal on_player_moved(part: TilePartValue)
+signal on_player_moved(part: PathPart)
 
-var current_part: TilePartValue
-var next_part: TilePartValue
+var current_part: PathPart
+var next_part: PathPart
 
 
-func move_to(part: TilePartValue) -> void:
+func move_to(part: PathPart) -> void:
 	current_part = part
 	on_player_moved.emit(current_part)

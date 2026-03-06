@@ -34,9 +34,11 @@ func initialize() -> void:
 	tile.value = TileValue.generate()
 
 	player = PlayerValue.new()
-	player.move_to(TilePartValue.from_tile_value(tile.value))
+	var tile_index = NB_ROWS * NB_COLUMNS / 2
+	var path = PathPart.new(tile_index, tile.value, tile.value.random_available_road())
+	player.move_to(path)
 
-	on_tile_played.emit(tile, NB_ROWS * NB_COLUMNS / 2)
+	on_tile_played.emit(tile, tile_index)
 
 
 func set_slot_size(size: int) -> void:
@@ -49,8 +51,9 @@ func set_selection(value: TileValue):
 
 
 func set_slot_hover(index):
-	slot_hover = index
-	on_slot_hover_change.emit(index)
+	if slot_hover != index:
+		slot_hover = index
+		on_slot_hover_change.emit(index)
 
 
 func get_board() -> Board:

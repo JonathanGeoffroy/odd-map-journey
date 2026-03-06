@@ -43,3 +43,17 @@ static func compute_road_by_kind(kind: TileKind) -> Array[bool]:
 func rotate(number: int) -> void:
 	rotation = (rotation + number) % 4
 	on_rotate.emit(rotation)
+
+
+func random_available_road() -> TileRoad:
+	var road: TileRoad
+	var rand = randi_range(0, 3)
+	var road_selected = false
+	while !road_selected:
+		if roads[rand] == true:
+			road = rand
+			road_selected = true
+		else:
+			rand = (rand + 1) % 4
+
+	return road
