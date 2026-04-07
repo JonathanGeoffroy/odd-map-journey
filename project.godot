@@ -24,6 +24,10 @@ BoardHelper="*uid://cwdp6ryctday5"
 
 window/stretch/mode="canvas_items"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/imjp94.yafsm/plugin.cfg")
+
 [global_group]
 
 Tile=""

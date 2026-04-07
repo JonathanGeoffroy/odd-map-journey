@@ -8,6 +8,7 @@ var SlotScene := preload("res://board/slot.tscn")
 
 @onready var boardChecker := BoardChecker.new()
 @onready var boardPath := BoardPath.new()
+var best_path: Array[PathPart]
 
 
 func _ready() -> void:
@@ -86,7 +87,7 @@ func on_slot_hover_changed(slot_index) -> void:
 	compute_tile_state(slot_index)
 
 	if slot_index != null:
-		var best_path = (
+		best_path = (
 			boardPath
 			. find_best_path(
 				Globals.grid,
@@ -121,3 +122,16 @@ func find_slot_at(gridIndex: int) -> Slot:
 func find_slot(tileValue: TileValue) -> Slot:
 	var index := Globals.grid.find(tileValue)
 	return find_slot_at(index)
+
+
+func move_player() -> void:
+	var path_array = (
+		boardPath
+		. find_best_path(
+			Globals.grid,
+			Globals.player.current_part,
+		)
+	)
+
+	var next_position = path_array.pop_front()
+	Globals.player.move_to(next_position)

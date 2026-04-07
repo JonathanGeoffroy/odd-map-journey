@@ -3,9 +3,8 @@ class_name BoardPath
 
 
 func find_best_path(grid: Array[TileValue], from: PathPart) -> Array[PathPart]:
-	var result = compute_next(grid, from, [])
-
-	print("SIZE ", result.size())
+	var result = compute_next(grid, from, [from])
+	result.pop_front()
 	return result
 
 

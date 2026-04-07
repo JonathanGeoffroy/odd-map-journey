@@ -4,6 +4,8 @@ const TileScene = preload("res://tile/Tile.tscn")
 
 @export var margin := 8
 
+var enabled: bool = true
+
 
 func _ready() -> void:
 	Globals.on_tile_added.connect(on_tile_added)
@@ -53,6 +55,9 @@ func on_play_selection(grid_index: int) -> void:
 
 
 func _input(event):
+	if not enabled:
+		return
+
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
@@ -70,3 +75,7 @@ func _input(event):
 							Globals.set_selection(
 								tile.value if tile.value != Globals.selected_tile else null
 							)
+
+
+func set_enabled(enabled: bool) -> void:
+	self.enabled = enabled

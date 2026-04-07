@@ -1,11 +1,89 @@
 [gd_scene format=3 uid="uid://bwkiao2j5p8l7"]
 
 [ext_resource type="PackedScene" uid="uid://c5bukdlo33f5x" path="res://board/board.tscn" id="1_e2o6t"]
+[ext_resource type="Script" uid="uid://bgj37x5dqpqer" path="res://game.gd" id="1_eow3j"]
 [ext_resource type="PackedScene" uid="uid://d2mommvo3s5my" path="res://deck/deck.tscn" id="2_feb5d"]
+[ext_resource type="Script" uid="uid://h465e6qmpjot" path="res://addons/imjp94.yafsm/src/StateMachinePlayer.gd" id="3_ryrav"]
+[ext_resource type="Script" uid="uid://bnx27hcogdub0" path="res://addons/imjp94.yafsm/src/states/StateMachine.gd" id="4_eow3j"]
+[ext_resource type="Script" uid="uid://0kr0wh43hafc" path="res://addons/imjp94.yafsm/src/states/State.gd" id="5_j5wjh"]
+[ext_resource type="Script" uid="uid://bprjvikcg0c2i" path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" id="6_vef74"]
+[ext_resource type="Script" uid="uid://tem2cajrhsli" path="res://addons/imjp94.yafsm/src/conditions/Condition.gd" id="8_j5wjh"]
+
+[sub_resource type="Resource" id="Resource_hve3p"]
+script = ExtResource("5_j5wjh")
+name = "Entry"
+metadata/graph_offset = Vector2(161, 181)
+
+[sub_resource type="Resource" id="Resource_iotsf"]
+script = ExtResource("5_j5wjh")
+name = "MovePlayer"
+metadata/graph_offset = Vector2(548, 181)
+
+[sub_resource type="Resource" id="Resource_mfdv2"]
+script = ExtResource("5_j5wjh")
+name = "PlayTile"
+metadata/graph_offset = Vector2(361, 181)
+
+[sub_resource type="Resource" id="Resource_lc2xo"]
+script = ExtResource("6_vef74")
+from = "Entry"
+to = "PlayTile"
+
+[sub_resource type="Resource" id="Resource_e8heu"]
+script = ExtResource("8_j5wjh")
+name = "move"
+
+[sub_resource type="Resource" id="Resource_7sc4i"]
+script = ExtResource("6_vef74")
+from = "MovePlayer"
+to = "PlayTile"
+conditions = {
+"move": SubResource("Resource_e8heu")
+}
+
+[sub_resource type="Resource" id="Resource_vef74"]
+script = ExtResource("8_j5wjh")
+name = "play"
+
+[sub_resource type="Resource" id="Resource_215e1"]
+script = ExtResource("6_vef74")
+from = "PlayTile"
+to = "MovePlayer"
+conditions = {
+"play": SubResource("Resource_vef74")
+}
+
+[sub_resource type="Resource" id="Resource_80cx4"]
+script = ExtResource("4_eow3j")
+states = {
+"Entry": SubResource("Resource_hve3p"),
+"MovePlayer": SubResource("Resource_iotsf"),
+"PlayTile": SubResource("Resource_mfdv2")
+}
+transitions = {
+"Entry": {
+"PlayTile": SubResource("Resource_lc2xo")
+},
+"MovePlayer": {
+"PlayTile": SubResource("Resource_7sc4i")
+},
+"PlayTile": {
+"MovePlayer": SubResource("Resource_215e1")
+}
+}
 
 [node name="Game" type="Node2D" unique_id=346825025]
+script = ExtResource("1_eow3j")
 
 [node name="Deck" parent="." unique_id=2064721474 instance=ExtResource("2_feb5d")]
+unique_name_in_owner = true
 
 [node name="Board" parent="." unique_id=2075713863 instance=ExtResource("1_e2o6t")]
+unique_name_in_owner = true
 position = Vector2(200, 0)
+
+[node name="GameFSM" type="Node" parent="." unique_id=1152388220]
+unique_name_in_owner = true
+script = ExtResource("3_ryrav")
+state_machine = SubResource("Resource_80cx4")
+metadata/_custom_type_script = "uid://h465e6qmpjot"

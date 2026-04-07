@@ -1,4 +1,5 @@
 extends Node2D
+class_name Player
 
 var bottom := 0
 
@@ -24,9 +25,9 @@ func move_to(tile_part: PathPart) -> void:
 		TileValue.TileRoad.RIGHT:
 			offset = Vector2(offset_value, 0)
 		TileValue.TileRoad.BOTTOM:
-			offset = Vector2(0, -offset_value)
+			offset = Vector2(0, offset_value)
 		TileValue.TileRoad.LEFT:
-			offset = Vector2(offset_value, 0)
+			offset = Vector2(-offset_value, 0)
 
 	global_position = (
 		slot.global_position
