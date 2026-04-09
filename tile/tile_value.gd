@@ -11,6 +11,7 @@ enum TileRoad { TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3 }
 @export var roads: Array[bool] = [false, false, false, false]
 @export var errored := false
 @export var rotation := 0
+@export var used_for: Array[int]
 
 
 static func generate() -> TileValue:
@@ -23,6 +24,7 @@ static func generate() -> TileValue:
 func _init(tile_kind: TileKind) -> void:
 	kind = tile_kind
 	roads = compute_road_by_kind(kind)
+	used_for = [0, 0, 0, 0]
 
 
 static func compute_road_by_kind(kind: TileKind) -> Array[bool]:

@@ -87,13 +87,14 @@ func on_slot_hover_changed(slot_index) -> void:
 	compute_tile_state(slot_index)
 
 	if slot_index != null:
-		best_path = (
-			boardPath
-			. find_best_path(
-				Globals.grid,
-				Globals.player.current_part,
-			)
-		)
+		pass
+		#best_path = (
+		#	boardPath
+		#	. find_best_path(
+		#		Globals.grid,
+		#		Globals.player.current_part,
+		#	)
+		# )
 
 
 func on_selection_changed(tileValue: TileValue) -> void:
@@ -135,3 +136,4 @@ func move_player() -> void:
 
 	var next_position = path_array.pop_front()
 	Globals.player.move_to(next_position)
+	next_position.tile_value.used_for[next_position.road] = Globals.TIME_USED

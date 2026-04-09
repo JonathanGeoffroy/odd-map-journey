@@ -10,6 +10,7 @@ signal on_slot_hover_change(value: TileValue, index: int)
 
 @export var NB_COLUMNS := 5
 @export var NB_ROWS := 5
+@export var TIME_USED := 3
 @export var grid: Array[TileValue]
 @export var slot_size: int = 128
 @export var slot_hover = null
